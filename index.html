@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>دفتر ملاحظاتي الطبي</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            background-image: radial-gradient(circle at 10% 20%, rgba(42, 157, 143, 0.05) 0%, transparent 30%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(18, 28, 46, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px -10px rgba(0, 20, 40, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(145deg, #2a9d8f, #1e7b6e);
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 16px -4px rgba(42, 157, 143, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            background: rgba(42, 157, 143, 0.2);
+            color: #a0e0d5;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 2px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            font-size: 1.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        /* Login Section */
+        #login-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 20px;
+        }
+        .login-card {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .login-card h2 {
+            color: #1e2b3c;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        .login-card p {
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        #google-login {
+            background: #1e2b3c;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px -8px #1e2b3c;
+        }
+        #google-login:hover {
+            background: #2a3b4f;
+            transform: scale(1.02);
+        }
+        #google-login i {
+            font-size: 1.3rem;
+        }
+
+        /* Main App (hidden initially) */
+        #app {
+            display: none;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1300px;
+            margin: 24px auto;
+            padding: 0 20px;
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: linear-gradient(135deg, #1e2b3c, #0f1a28);
+            border-radius: 32px;
+            padding: 32px 36px;
+            margin-bottom: 32px;
+            color: white;
+            box-shadow: 0 25px 40px -15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: "⚕️";
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 150px;
+            opacity: 0.03;
+            transform: rotate(-10deg);
+        }
+
+        .welcome-card h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card p {
+            color: #adb5bd;
+            max-width: 600px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .year-badge {
+            background: rgba(42, 157, 143, 0.2);
+            border: 1px solid #2a9d8f;
+            color: #2a9d8f;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: white;
+            border-radius: 20px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 10px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab i {
+            font-size: 1.2rem;
+        }
+
+        .tab.active {
+            background: #1e2b3c;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,40,80,0.2);
+        }
+
+        .tab.active i {
+            color: #2a9d8f;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subjects Panel */
+        .subjects-panel {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            height: fit-content;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f4f9;
+        }
+
+        .panel-header h3 {
+            color: #1e2b3c;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .count-badge {
+            background: #f1f4f9;
+            color: #4a5a6e;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Subject Items */
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .subject-item {
+            border-radius: 16px;
+            background: #f8fafd;
+            overflow: hidden;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .subject-item:hover {
+            border-color: #e0e7f0;
+            background: #ffffff;
+        }
+
+        .subject-main {
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 500;
+            color: #1e2b3c;
+        }
+
+        .subject-main i {
+            color: #6c757d;
+            transition: transform 0.2s;
+        }
+
+        .subject-main.active i {
+            transform: rotate(90deg);
+            color: #2a9d8f;
+        }
+
+        .subject-main.active {
+            color: #2a9d8f;
+            font-weight: 600;
+        }
+
+        .sub-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #ffffff;
+            padding: 0 18px;
+        }
+
+        .sub-items.show {
+            max-height: 300px;
+            padding: 0 18px 16px;
+        }
+
+        .sub-item {
+            padding: 12px 16px;
+            margin: 4px 0;
+            background: #f8fafd;
+            border-radius: 12px;
+            color: #4a5a6e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .sub-item:hover {
+            background: #edf2f9;
+            border-color: #d0d9e8;
+            transform: translateX(5px);
+            color: #1e2b3c;
+        }
+
+        .sub-item i {
+            font-size: 0.9rem;
+            color: #8a9bb0;
+            width: 20px;
+        }
+
+        /* Right Panel */
+        .upload-panel {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: sticky;
+            top: 100px;
+        }
+
+        .upload-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-icon {
+            width: 70px;
+            height: 70px;
+            background: #f0f7fa;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 30px;
+            color: #2a9d8f;
+        }
+
+        .upload-header h4 {
+            color: #1e2b3c;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .upload-header p {
+            color: #7f8fa4;
+            font-size: 0.9rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #d0ddeb;
+            border-radius: 20px;
+            padding: 30px 15px;
+            text-align: center;
+            background: #fafcff;
+            margin: 20px 0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-area i {
+            font-size: 35px;
+            color: #a0b8cc;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #5f7d9c;
+            font-size: 0.9rem;
+        }
+
+        .coming-soon {
+            background: #f0f7fa;
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+            color: #2a9d8f;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .quick-access {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #edf2f9;
+        }
+
+        .quick-access h5 {
+            color: #8a9bb0;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .recent-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .recent-tag {
+            background: #f1f4f9;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #4a5a6e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .recent-tag i {
+            font-size: 0.7rem;
+            color: #7f8fa4;
+        }
+
+        /* Logout button inside app */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #logout-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header {
+                padding: 12px 16px;
+            }
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+            .welcome-card {
+                padding: 24px;
+            }
+            .welcome-card h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- قسم تسجيل الدخول -->
+    <div id="login-section">
+        <div class="login-card">
+            <div class="logo-icon" style="margin: 0 auto 20px; width: 70px; height: 70px; font-size: 32px;">
+                <i class="fas fa-stethoscope"></i>
+            </div>
+            <h2>دفتر ملاحظاتي الطبي</h2>
+            <p>منصتك الطبية الشخصية<br>سجل بحساب Google للبدء</p>
+            <button id="google-login">
+                <i class="fab fa-google"></i> تسجيل الدخول بحساب Google
+            </button>
+        </div>
+    </div>
+
+    <!-- التطبيق الرئيسي (يظهر بعد تسجيل الدخول) -->
+    <div id="app">
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>دفتر ملاحظاتي الطبي</h1>
+                    <span class="badge">Medical Student · Clinical Years</span>
+                </div>
+            </div>
+            <div class="user-info">
+                <span id="user-name-display" style="color: white; font-weight: 500;"></span>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="welcome-card">
+                <h2>مرحباً، <span id="welcome-name">دكتور</span> 👋</h2>
+                <p>مكتبتك الطبية المنظمة. ابدأ بالتصفح أو أضف موارد جديدة.</p>
+                <div class="year-badge">
+                    <i class="fas fa-graduation-cap" style="margin-right: 6px;"></i> Clinical Student · Class 2026
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab active" id="basic-tab"><i class="fas fa-flask"></i> Basic Science</button>
+                <button class="tab" id="clinical-tab"><i class="fas fa-heartbeat"></i> Clinical Science</button>
+            </div>
+
+            <div class="content-grid">
+                <!-- قائمة المواد -->
+                <div class="subjects-panel">
+                    <div class="panel-header">
+                        <h3 id="panel-title">Basic Science · Preclinical</h3>
+                        <span class="count-badge" id="subject-count">7 subjects</span>
+                    </div>
+                    <div class="subject-list" id="subject-list">
+                        <!-- سيتم ملؤها عبر JavaScript -->
+                    </div>
+                </div>
+
+                <!-- اللوحة الجانبية (رفع + وصول سريع) -->
+                <div class="upload-panel">
+                    <div class="upload-header">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4>رفع الموارد</h4>
+                        <p>PDF, فيديوهات, محاضرات</p>
+                    </div>
+                    <div class="upload-area" id="upload-area">
+                        <i class="fas fa-file-medical-alt"></i>
+                        <p>محتواك هنا قريباً</p>
+                        <p style="font-size: 0.8rem;">(سيتم تفعيل الرفع لاحقاً)</p>
+                    </div>
+                    <div class="coming-soon">
+                        <i class="fas fa-hourglass-half"></i> مكتبتك الشخصية · أضف ملفات لاحقاً
+                    </div>
+                    <div class="quick-access">
+                        <h5>📌 وصول سريع</h5>
+                        <div class="recent-items" id="quick-access-list">
+                            <!-- تضاف ديناميكياً -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (modular) -->
+    <script type="module">
+        // استيراد مكتبات Firebase (باستخدام CDN)
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        // 🔁 استبدل هذا الكائن بإعدادات مشروعك من Firebase
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAyXPf_NVkaWDSOhv1ZP3Wr2cff3NNGKI8",
+  authDomain: "my-medical-notebook.firebaseapp.com",
+  projectId: "my-medical-notebook",
+  storageBucket: "my-medical-notebook.firebasestorage.app",
+  messagingSenderId: "429992493503",
+  appId: "1:429992493503:web:dab52bf15591dd9c03610a",
+  measurementId: "G-5D4HVJ5PK4"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // عناصر DOM
+        const loginSection = document.getElementById('login-section');
+        const appSection = document.getElementById('app');
+        const googleLoginBtn = document.getElementById('google-login');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userNameDisplay = document.getElementById('user-name-display');
+        const welcomeName = document.getElementById('welcome-name');
+
+        // بيانات المواد الأساسية والسريرية (كما في السابق)
+        const basicSubjects = [
+            { name: 'Anatomy', icon: 'fa-bone', color: '#b23b3b', subs: ['Gross Anatomy', 'Histology', 'Embryology'] },
+            { name: 'Biochemistry', icon: 'fa-dna', color: '#2d6a4f', subs: ['Basic Concepts', 'Metabolism'] },
+            { name: 'Physiology', icon: 'fa-heart', color: '#b23b3b', subs: ['Cardiovascular', 'Respiratory', 'Renal'] },
+            { name: 'Pathology', icon: 'fa-disease', color: '#b23b3b', subs: ['General Pathology', 'Systemic Pathology'] },
+            { name: 'Pharmacology', icon: 'fa-pills', color: '#0f5e9c', subs: ['General Principles', 'Systems Pharmacology'] },
+            { name: 'Microbiology', icon: 'fa-bacteria', color: '#6c584c', subs: ['Bacteriology', 'Virology', 'Parasitology'] },
+            { name: 'Community Medicine', icon: 'fa-users', color: '#1e6091', subs: ['Epidemiology', 'Biostatistics'] }
+        ];
+
+        const clinicalSubjects = [
+            { name: 'Internal Medicine', icon: 'fa-heartbeat', color: '#b23b3b', subs: ['Cardiology', 'Pulmonology', 'Gastroenterology', 'Nephrology', 'Endocrinology', 'Hematology'] },
+            { name: 'Pediatrics', icon: 'fa-child', color: '#f4a261', subs: ['Neonatology', 'Growth & Development', 'Pediatric Infections', 'Vaccinations'] },
+            { name: 'Obstetrics & Gynecology', icon: 'fa-female', color: '#c77dff', subs: ['Antenatal Care', 'Labour & Delivery', 'Gynecologic Oncology', 'Reproductive Health'] },
+            { name: 'Surgery', icon: 'fa-scalpel', color: '#bc6c25', subs: ['General Surgery', 'Orthopedics', 'Neurosurgery', 'Cardiothoracic', 'Pediatric Surgery'] }
+        ];
+
+        // عناصر tabs
+        const basicTab = document.getElementById('basic-tab');
+        const clinicalTab = document.getElementById('clinical-tab');
+        const panelTitle = document.getElementById('panel-title');
+        const subjectCount = document.getElementById('subject-count');
+        const subjectListDiv = document.getElementById('subject-list');
+        const quickAccessList = document.getElementById('quick-access-list');
+        const uploadArea = document.getElementById('upload-area');
+
+        // دالة لإنشاء HTML لمادة
+        function createSubjectHTML(subject) {
+            let html = `<div class="subject-item">`;
+            html += `<div class="subject-main" onclick="toggleSubItems(this)">`;
+            html += `<span><i class="fas ${subject.icon}" style="color: ${subject.color}; margin-left: 12px;"></i> ${subject.name}</span>`;
+            html += `<i class="fas fa-chevron-right"></i>`;
+            html += `</div>`;
+            html += `<div class="sub-items">`;
+            subject.subs.forEach(sub => {
+                html += `<div class="sub-item" onclick="selectSubItem('${sub}')"><i class="fas fa-chevron-left"></i> ${sub}</div>`;
+            });
+            html += `</div></div>`;
+            return html;
+        }
+
+        // دالة عرض المواد الأساسية
+        function renderBasic() {
+            let html = '';
+            basicSubjects.forEach(subj => {
+                html += createSubjectHTML(subj);
+            });
+            subjectListDiv.innerHTML = html;
+            panelTitle.innerText = 'Basic Science · Preclinical';
+            subjectCount.innerText = basicSubjects.length + ' subjects';
+        }
+
+        // دالة عرض المواد السريرية
+        function renderClinical() {
+            let html = '';
+            clinicalSubjects.forEach(subj => {
+                html += createSubjectHTML(subj);
+            });
+            subjectListDiv.innerHTML = html;
+            panelTitle.innerText = 'Clinical Science · Clerkship';
+            subjectCount.innerText = clinicalSubjects.length + ' specialties';
+        }
+
+        // دالة تحديث الوصول السريع (نأخذ أول 4 مواد عشوائية أو ثابتة)
+        function updateQuickAccess() {
+            const allSubs = [];
+            basicSubjects.forEach(s => s.subs.forEach(sub => allSubs.push(sub)));
+            clinicalSubjects.forEach(s => s.subs.forEach(sub => allSubs.push(sub)));
+            // نأخذ أول 4 (أو يمكن جعلها ديناميكية لاحقاً)
+            const quick = allSubs.slice(0, 6);
+            let html = '';
+            quick.forEach(item => {
+                html += `<div class="recent-tag" onclick="selectSubItem('${item}')"><i class="fas fa-bookmark"></i> ${item}</div>`;
+            });
+            quickAccessList.innerHTML = html;
+        }
+
+        // دالة لاختيار مادة فرعية (يمكن ربطها لاحقاً برفع الملفات)
+        window.selectSubItem = function(item) {
+            alert(`📂 ${item}\n(سيتم فتح ملفاتك هنا قريباً)`);
+        };
+
+        // دالة toggle القوائم الفرعية
+        window.toggleSubItems = function(element) {
+            element.classList.toggle('active');
+            const parent = element.closest('.subject-item');
+            const sub = parent.querySelector('.sub-items');
+            if (sub) sub.classList.toggle('show');
+        };
+
+        // أحداث tabs
+        basicTab.addEventListener('click', () => {
+            basicTab.classList.add('active');
+            clinicalTab.classList.remove('active');
+            renderBasic();
+        });
+
+        clinicalTab.addEventListener('click', () => {
+            clinicalTab.classList.add('active');
+            basicTab.classList.remove('active');
+            renderClinical();
+        });
+
+        // تسجيل الدخول
+        googleLoginBtn.addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then(result => {
+                    // تم التسجيل
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('فشل تسجيل الدخول: ' + error.message);
+                });
+        });
+
+        // تسجيل الخروج
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {});
+        });
+
+        // مراقبة حالة المصادقة
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                // مستخدم مسجل الدخول
+                loginSection.style.display = 'none';
+                appSection.style.display = 'block';
+                const name = user.displayName || 'دكتور';
+                userNameDisplay.textContent = name;
+                welcomeName.textContent = name;
+
+                // عرض المواد الأساسية افتراضياً
+                renderBasic();
+                updateQuickAccess();
+            } else {
+                // لا يوجد مستخدم
+                loginSection.style.display = 'flex';
+                appSection.style.display = 'none';
+            }
+        });
+
+        // عند النقر على منطقة الرفع
+        uploadArea.addEventListener('click', () => {
+            alert('📤 ميزة رفع الملفات قيد التطوير. ستتمكن قريباً من إضافة ملفات PDF وفيديوهات.');
+        });
+
+        // يمكن إضافة بعض العناصر للوصول السريع
+    </script>
+</body>
+</html>
